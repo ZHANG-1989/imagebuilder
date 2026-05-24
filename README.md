@@ -1,0 +1,59 @@
+# daed-imagebuilder
+
+Build an ImmortalWrt x86/64 KVM test image with only the runtime dependencies
+needed for testing locally built `dae`, `daed`, and `luci-app-daed` APKs.
+
+This repository intentionally does **not** bake these packages into the image:
+
+- `dae`
+- `daed`
+- `luci-app-daed`
+- `luci-i18n-daed-zh-cn`
+
+Those packages should be installed later from the test build artifacts, so the
+VM validates the packages from `wall` / `luci-app-daed` instead of the official
+feed packages.
+
+## Default Image
+
+- Version: ImmortalWrt `SNAPSHOT`
+- Target: `x86/64`
+- Profile: `generic`
+- ImageBuilder URL:
+  `https://downloads.immortalwrt.org/snapshots/targets/x86/64/immortalwrt-imagebuilder-x86-64.Linux-x86_64.tar.zst`
+
+## Extra Packages
+
+The workflow adds only runtime dependencies:
+
+```text
+luci
+kmod-sched-core
+kmod-sched-bpf
+kmod-veth
+kmod-xdp-sockets-diag
+vmlinux-btf
+v2ray-geoip
+v2ray-geosite
+```
+
+If the current ImmortalWrt snapshot does not publish one of these packages,
+the build should fail. That is intentional because `dae/daed` will not be
+installable cleanly on that snapshot either.
+
+## First Boot Defaults
+
+The generated image applies these defaults on first boot:
+
+- LAN IP: `192.168.3.249/24`
+- Gateway: `192.168.3.254`
+- DNS: `192.168.3.254`, `223.5.5.5`
+- SSH port: `9167`
+- root password: `sony66..`
+
+## Build
+
+Run the `Build daed test image` workflow manually from GitHub Actions.
+
+The workflow uploads generated images as an artifact. When `publish_release` is
+set to `true`, it also publishes a GitHub release.

@@ -1,0 +1,93 @@
+name: Build daed test image
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish_release:
+        description: Publish generated images to a GitHub release
+        required: true
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+      extra_packages:
+        description: Extra packages to install into the base image
+        required: true
+        default: "luci kmod-sched-core kmod-sched-bpf kmod-veth kmod-xdp-sockets-diag vmlinux-btf v2ray-geoip v2ray-geosite"
+      imagebuilder_url:
+        description: ImmortalWrt ImageBuilder URL
+        required: true
+        default: "https://downloads.immortalwrt.org/snapshots/targets/x86/64/immortalwrt-imagebuilder-x86-64.Linux-x86_64.tar.zst"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install host dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            clang \
+            flex \
+            bison \
+            gawk \
+            gettext \
+            git \
+            libncurses-dev \
+            libssl-dev \
+            python3 \
+            python3-distutils \
+            rsync \
+            unzip \
+            zstd \
+            file \
+            wget \
+            curl
+
+      - name: Build image
+        env:
+          IMAGEBUILDER_URL: ${{ inputs.imagebuilder_url }}
+          EXTRA_PACKAGES: ${{ inputs.extra_packages }}
+          OUT_DIR: ${{ github.workspace }}/out
+        run: |
+          chmod +x scripts/build-image.sh
+          scripts/build-image.sh
+
+      - name: Write manifest
+        run: |
+          {
+            echo "date=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "imagebuilder_url=${{ inputs.imagebuilder_url }}"
+            echo "extra_packages=${{ inputs.extra_packages }}"
+            echo
+            sha256sum out/* || true
+          } > out/BUILD-MANIFEST.txt
+          cat out/BUILD-MANIFEST.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: immortalwrt-daed-deps-x86-64
+          path: out/*
+          if-no-files-found: error
+
+      - name: Publish release
+        if: inputs.publish_release == 'true'
+        uses: ncipollo/release-action@v1
+        with:
+          tag: daed-deps-${{ github.run_number }}
+          name: daed deps image ${{ github.run_number }}
+          artifacts: out/*
+          allowUpdates: true
+          replacesArtifacts: true
+          bodyFile: out/BUILD-MANIFEST.txt
