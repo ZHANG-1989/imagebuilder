@@ -30,7 +30,7 @@ on:
       rootfs_partsize:
         description: Root filesystem partition size in MB
         required: true
-        default: "2048"
+        default: "1024"
 
 permissions:
   contents: write

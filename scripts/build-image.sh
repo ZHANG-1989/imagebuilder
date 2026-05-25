@@ -8,7 +8,7 @@ IMAGEBUILDER_URL="${IMAGEBUILDER_URL:-https://downloads.immortalwrt.org/releases
 EXTRA_IMAGE_NAME="${EXTRA_IMAGE_NAME:-daed-deps}"
 OUT_DIR="${OUT_DIR:-$PWD/out}"
 PREFLIGHT="${PREFLIGHT:-1}"
-ROOTFS_PARTSIZE="${ROOTFS_PARTSIZE:-2048}"
+ROOTFS_PARTSIZE="${ROOTFS_PARTSIZE:-1024}"
 
 EXTRA_PACKAGES="${EXTRA_PACKAGES:-luci kmod-sched-core kmod-sched-bpf kmod-veth kmod-xdp-sockets-diag vmlinux-btf v2ray-geoip v2ray-geosite}"
 
