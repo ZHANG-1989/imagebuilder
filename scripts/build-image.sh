@@ -46,13 +46,22 @@ ImageBuilder failed.
 Common causes for this daed test image:
 - The selected ImmortalWrt snapshot ImageBuilder and package feeds are out of sync.
   Example: base packages require a newer libubox/libblobmsg-json than the public feed provides.
-- vmlinux-btf is not published for the selected target/feed. ImageBuilder can only install
-  packages that already exist in the feed; it cannot build vmlinux-btf by itself.
+- One of the dae/daed eBPF dependencies (kmod-sched-bpf / kmod-veth / kmod-xdp-sockets-diag)
+  is missing from the selected target's kmod feed for the current kernel version.
+
+About BTF (no longer a blocker on 25.12):
+- ImmortalWrt 25.12 kernels enable CONFIG_DEBUG_INFO_BTF by default. dae/daed reads BTF
+  directly from /sys/kernel/btf/vmlinux at runtime and does NOT require a separate
+  vmlinux-btf package. Do not add vmlinux-btf to EXTRA_PACKAGES — it is not published
+  in the feed and ImageBuilder cannot build it.
+- If you ever target an older OpenWrt release whose kernel lacks built-in BTF, build
+  vmlinux-btf via a full SDK build first (ImageBuilder cannot compile packages).
 
 Next choices:
 - Retry later with the same 25.12-SNAPSHOT URL after ImmortalWrt feeds finish syncing.
-- Use a release/rc ImageBuilder URL and build dae/daed APKs against the same release/rc.
-- Rebuild dae/daed with BPF_DEPENDS instead of vmlinux-btf if that target does not publish vmlinux-btf.
+- Use a release/rc ImageBuilder URL and rebuild dae/daed APKs against that release/rc.
+- Verify kmod-* packages exist for the target+kernel combo via:
+    make manifest PROFILE="$PROFILE" PACKAGES="$EXTRA_PACKAGES"
 EOF
 }
 

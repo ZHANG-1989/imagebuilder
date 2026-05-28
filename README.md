@@ -1,4 +1,4 @@
-# daed-imagebuilder
+# imagebuilder
 
 Build an ImmortalWrt x86/64 KVM test image with only the runtime dependencies
 needed for testing locally built `dae`, `daed`, and `luci-app-daed` APKs.
