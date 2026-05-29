@@ -8,7 +8,6 @@ This repository intentionally does **not** bake these packages into the image:
 - `dae`
 - `daed`
 - `luci-app-daed`
-- `luci-i18n-daed-zh-cn`
 
 Those packages should be installed later from the test build artifacts, so the
 VM validates the packages from `wall` / `luci-app-daed` instead of the official
