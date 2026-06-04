@@ -16,8 +16,8 @@
 - Rootfs 分区：`1024` MB
 - ImageBuilder URL：
   `https://downloads.immortalwrt.org/releases/25.12-SNAPSHOT/targets/x86/64/immortalwrt-imagebuilder-25.12-SNAPSHOT-x86-64.Linux-x86_64.tar.zst`
-- 快捷链接：
-  [`kenzok8/luci-app-daede`](https://github.com/kenzok8/luci-app-daede)
+- luci-app-daede：
+  [`luci-app-daede`](https://github.com/kenzok8/luci-app-daede)
 
 ### 默认安装包
 
