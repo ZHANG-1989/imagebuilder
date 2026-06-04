@@ -1,4 +1,4 @@
-name: Build daed test image
+name: Build daede image
 
 on:
   workflow_dispatch:
@@ -27,6 +27,22 @@ on:
         description: Root filesystem partition size in MB
         required: true
         default: "1024"
+      install_daede:
+        description: Bake luci-app-daede release APK into the image
+        required: true
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+      daede_release_tag:
+        description: luci-app-daede release tag, or latest
+        required: true
+        default: "latest"
+      daede_apk_url:
+        description: Optional direct luci-app-daede APK URL override
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -69,6 +85,10 @@ jobs:
           IMAGEBUILDER_URL: ${{ inputs.imagebuilder_url }}
           PREFLIGHT: ${{ inputs.preflight }}
           ROOTFS_PARTSIZE: ${{ inputs.rootfs_partsize }}
+          INSTALL_DAEDE: ${{ inputs.install_daede }}
+          DAEDE_RELEASE_TAG: ${{ inputs.daede_release_tag }}
+          DAEDE_APK_URL: ${{ inputs.daede_apk_url }}
+          GITHUB_TOKEN: ${{ github.token }}
           OUT_DIR: ${{ github.workspace }}/out
         run: |
           chmod +x scripts/build-image.sh
@@ -88,7 +108,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
-          name: immortalwrt-daed-deps-x86-64
+          name: immortalwrt-daede-x86-64
           path: out/*
           if-no-files-found: error
 
@@ -96,8 +116,8 @@ jobs:
         if: inputs.publish_release == 'true'
         uses: ncipollo/release-action@v1
         with:
-          tag: daed-deps-${{ github.run_number }}
-          name: daed deps image ${{ github.run_number }}
+          tag: daede-${{ github.run_number }}
+          name: daede image ${{ github.run_number }}
           artifacts: out/*
           allowUpdates: true
           replacesArtifacts: true
