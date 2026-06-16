@@ -109,6 +109,9 @@ install_daede_apk
 
 cd "$WORK_DIR/imagebuilder"
 
+# let ImageBuilder generate APKINDEX from the downloaded APK
+make package_index 2>/dev/null || true
+
 echo "Version: $VERSION"
 echo "Target: $TARGET"
 echo "Profile: $PROFILE"
