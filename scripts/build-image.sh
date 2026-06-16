@@ -81,16 +81,18 @@ install_daede_apk() {
       ;;
   esac
 
-  local packages_dir="$WORK_DIR/imagebuilder/packages"
+  local arch="${DAEDE_ARCH:-x86_64}"
+  local packages_dir="$WORK_DIR/imagebuilder/packages/$arch"
   local daede_url
   daede_url="$(resolve_daede_apk_url)"
   mkdir -p "$packages_dir"
 
+  # ImageBuilder 25.12 expects APKs under packages/<arch>/ and uses
+  # underscore name_version_arch.apk naming. The release asset uses
+  # dashes and a target-arch suffix for a noarch package.
   echo "Downloading luci-app-daede APK: $daede_url"
   curl -L --retry 8 --retry-delay 5 --connect-timeout 30 \
-    -o "$packages_dir/${daede_url##*/}" "$daede_url"
-  # marker for post-cd local repo setup
-  touch "$packages_dir/.daede-local-repo"
+    -o "$packages_dir/luci-app-daede.apk" "$daede_url"
 }
 
 if [ ! -s "$IB_ARCHIVE" ]; then
@@ -106,12 +108,6 @@ cp -a files "$WORK_DIR/imagebuilder/files"
 install_daede_apk
 
 cd "$WORK_DIR/imagebuilder"
-
-# local APK repo — tell ImageBuilder to treat packages/ as a file:// repo
-if [ -f packages/.daede-local-repo ]; then
-  printf 'file://%s\n' "$PWD/packages" >> repositories
-  rm -f packages/.daede-local-repo
-fi
 
 echo "Version: $VERSION"
 echo "Target: $TARGET"
