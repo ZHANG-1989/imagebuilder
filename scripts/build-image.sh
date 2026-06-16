@@ -105,6 +105,15 @@ install_daede_apk
 
 cd "$WORK_DIR/imagebuilder"
 
+# daede feed so apk can resolve luci-app-daede during manifest / image build.
+# Map the ImageBuilder target (x86/64) to the feed's arch dir name (x86_64).
+_daede_target_arch="${DAEDE_ARCH:-x86_64}"
+_daede_sdk="$(echo "$IMAGEBUILDER_URL" | grep -oE '[0-9]+\.[0-9]+(-SNAPSHOT)?' | head -1)"
+[ -n "$_daede_sdk" ] || _daede_sdk="25.12"
+_feed_url="https://down.dllkids.xyz/openwrt-feed/${_daede_sdk}/${_daede_target_arch}"
+echo "Adding daede feed: $_feed_url"
+grep -qxF "$_feed_url" repositories 2>/dev/null || printf '%s\n' "$_feed_url" >> repositories
+
 echo "Version: $VERSION"
 echo "Target: $TARGET"
 echo "Profile: $PROFILE"
