@@ -89,6 +89,8 @@ install_daede_apk() {
   echo "Downloading luci-app-daede APK: $daede_url"
   curl -L --retry 8 --retry-delay 5 --connect-timeout 30 \
     -o "$packages_dir/${daede_url##*/}" "$daede_url"
+  # marker for post-cd local repo setup
+  touch "$packages_dir/.daede-local-repo"
 }
 
 if [ ! -s "$IB_ARCHIVE" ]; then
@@ -103,15 +105,13 @@ tar --use-compress-program=unzstd -xf "$IB_ARCHIVE" -C "$WORK_DIR/imagebuilder" 
 cp -a files "$WORK_DIR/imagebuilder/files"
 install_daede_apk
 
-# same prebuilt APK as the GitHub release, but ImageBuilder 25.12 needs feed
-# URL to resolve v2-format APKs (local packages/ only handles v3).
-_sdk="$(echo "$IMAGEBUILDER_URL" | grep -oE '[0-9]+\.[0-9]+' | head -1)"
-[ -n "$_sdk" ] || _sdk="25.12"
-printf 'https://down.dllkids.xyz/openwrt-feed/%s/%s\n' \
-  "$_sdk" "${DAEDE_ARCH:-x86_64}" \
-  >> "$WORK_DIR/imagebuilder/repositories"
-
 cd "$WORK_DIR/imagebuilder"
+
+# local APK repo — tell ImageBuilder to treat packages/ as a file:// repo
+if [ -f packages/.daede-local-repo ]; then
+  printf 'file://%s\n' "$PWD/packages" >> repositories
+  rm -f packages/.daede-local-repo
+fi
 
 echo "Version: $VERSION"
 echo "Target: $TARGET"
