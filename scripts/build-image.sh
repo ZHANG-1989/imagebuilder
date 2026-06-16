@@ -87,8 +87,11 @@ install_daede_apk() {
   mkdir -p "$packages_dir"
 
   echo "Downloading luci-app-daede APK: $daede_url"
+  # rename to standard apk format (name_version_arch.apk) so ImageBuilder
+  # parses the noarch arch correctly — the release asset uses dashes and a
+  # target-specific suffix but the package inside is all/noarch.
   curl -L --retry 8 --retry-delay 5 --connect-timeout 30 \
-    -o "$packages_dir/${daede_url##*/}" "$daede_url"
+    -o "$packages_dir/luci-app-daede.apk" "$daede_url"
 }
 
 if [ ! -s "$IB_ARCHIVE" ]; then
