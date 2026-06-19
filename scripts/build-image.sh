@@ -168,7 +168,12 @@ if ! make image \
     FILES=files \
     BIN_DIR="$OUT_DIR" \
     EXTRA_IMAGE_NAME="$EXTRA_IMAGE_NAME" \
-    ROOTFS_PARTSIZE="$ROOTFS_PARTSIZE"; then
+    ROOTFS_PARTSIZE="$ROOTFS_PARTSIZE" \
+    CONFIG_TARGET_ROOTFS_EXT4FS=n \
+    CONFIG_TARGET_ROOTFS_TARGZ=n \
+    CONFIG_VDI_IMAGES=n \
+    CONFIG_VHDX_IMAGES=n \
+    CONFIG_ISO_IMAGES=n; then
   diagnose_failure
   exit 1
 fi
