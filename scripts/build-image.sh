@@ -15,7 +15,8 @@ DAEDE_RELEASE_TAG="${DAEDE_RELEASE_TAG:-latest}"
 DAEDE_ARCH="${DAEDE_ARCH:-x86_64}"
 DAEDE_APK_URL="${DAEDE_APK_URL:-}"
 
-EXTRA_PACKAGES="${EXTRA_PACKAGES:-luci luci-i18n-base-zh-cn luci-i18n-package-manager-zh-cn luci-app-daede kmod-sched-core kmod-sched-bpf kmod-veth kmod-xdp-sockets-diag curl nano}"
+#EXTRA_PACKAGES="${EXTRA_PACKAGES:-luci luci-i18n-base-zh-cn luci-i18n-package-manager-zh-cn luci-app-daede kmod-sched-core kmod-sched-bpf kmod-veth kmod-xdp-sockets-diag curl nano}"
+EXTRA_PACKAGES="${EXTRA_PACKAGES:-luci-app-firewall luci-app-mwan3 luci-app-package-manager luci-app-ttyd luci-app-v2raya luci-base luci-compat luci-i18n-attendedsysupgrade-zh-cn luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-mwan3-zh-cn luci-i18n-package-manager-zh-cn luci-i18n-ttyd-zh-cn luci-i18n-v2raya-zh-cn luci-lib-base luci-lib-ip luci-lib-jsonc luci-lib-nixio luci-lib-uqr luci-light luci-lua-runtime luci-mod-admin-full luci-mod-network luci-mod-status luci-mod-system luci-proto-ipv6 luci-proto-ppp luci-theme-bootstrap mkf2fs mtd mwan3 netifd nftables-json ntfs3-mount odhcp6c odhcpd-ipv6only openwrt-keyring owut partx-utils ppp ppp-mod-pppoe procd procd-seccomp procd-ujail rpcd rpcd-mod-file rpcd-mod-iwinfo rpcd-mod-luci rpcd-mod-rpcsys rpcd-mod-rrdns rpcd-mod-ucode shellsync sysfsutils terminfo ttyd ubox ubus ubusd uci uclient-fetch ucode ucode-mod-digest ucode-mod-fs ucode-mod-html ucode-mod-log ucode-mod-lua ucode-mod-math ucode-mod-nl80211 ucode-mod-rtnl ucode-mod-ubus ucode-mod-uci ucode-mod-uclient ucode-mod-uloop uhttpd uhttpd-mod-ubus urandom-seed urngd usign v2ray-geoip v2ray-geosite v2raya wifi-scripts wireless-regdb wpa-supplicant xray-core xtables-nft zlib zoneinfo-asia zoneinfo-core luci-app-daede curl nano }"
 
 WORK_DIR="${WORK_DIR:-$PWD/work}"
 IB_ARCHIVE="$WORK_DIR/imagebuilder.tar.zst"
